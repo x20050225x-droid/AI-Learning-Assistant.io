@@ -7,10 +7,10 @@ if (typeof pdfjsLib !== 'undefined') {
 const BASE_URL = `https://generativelanguage.googleapis.com/v1beta/models/`;
 // 系統會依序嘗試以下模型，直到成功為止
 const MODEL_FALLBACKS = [
-    'gemini-1.5-flash',       // 首選：快速且穩定
-    'gemini-1.5-flash-002',   // 備選：更新的 Flash
-    'gemini-1.5-pro',         // 備選：更聰明但較慢
-    'gemini-1.0-pro'          // 最後防線
+    'gemini-2.0-flash-exp',    // 目前 2.0/2.5 世代的最速模型
+    'gemini-1.5-flash',        // 穩定版回退
+    'gemini-1.5-flash-8b',     // 輕量版回退
+    'gemini-1.5-pro'         // 最後防線
 ];
 
 const CONFIG = {
@@ -878,4 +878,5 @@ document.addEventListener('DOMContentLoaded', () => {
         hidePostDownloadModal();
         clearAllInputs();
     }, 'clearAndNewBtn');
+
 });
