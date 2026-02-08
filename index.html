@@ -3,45 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 學習助理 - 一頁式極速版</title>
+    <title>AI 學習助理 - 專題示範版</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --bg: #f3f4f6;
-            --card-bg: #ffffff;
-            --text: #1f2937;
+            --primary: #4285f4;
+            --success: #34a853;
+            --error: #ea4335;
+            --bg: #f8f9fa;
+            --text: #202124;
         }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .container {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            justify-content: center;
         }
+        .container { width: 100%; max-width: 800px; }
         .card {
-            background: var(--card-bg);
-            padding: 25px;
+            background: white;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
-        h1 { color: var(--primary); text-align: center; margin-bottom: 5px; }
-        .subtitle { text-align: center; color: #6b7280; font-size: 0.9em; margin-bottom: 20px; }
+        .hidden { display: none; }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #666; font-size: 0.9em; margin-bottom: 25px; }
         
-        label { display: block; margin-bottom: 8px; font-weight: 600; }
-        input, textarea, select {
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input, select, textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #d1d5db;
+            border: 1px solid #ddd;
             border-radius: 8px;
             margin-bottom: 15px;
             box-sizing: border-box;
-            font-size: 16px;
         }
         button {
             background-color: var(--primary);
@@ -53,47 +51,39 @@
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            transition: opacity 0.2s;
+            transition: 0.3s;
         }
-        button:hover { opacity: 0.9; }
-        button:disabled { background-color: #9ca3af; cursor: not-allowed; }
-
-        /* 測驗區樣式 */
-        .hidden { display: none; }
+        button:hover { background-color: #3367d6; }
+        
         .option-btn {
             background: white;
-            border: 2px solid #e5e7eb;
-            color: var(--text);
+            border: 2px solid #e0e0e0;
             text-align: left;
             margin-bottom: 10px;
+            color: var(--text);
         }
-        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #eff6ff; }
-        .option-btn.correct { background-color: #dcfce7; border-color: #22c55e; color: #14532d; }
-        .option-btn.wrong { background-color: #fee2e2; border-color: #ef4444; color: #7f1d1d; }
+        .option-btn.correct { background: var(--success); color: white; border-color: var(--success); }
+        .option-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
         
-        .feedback {
-            margin-top: 15px;
-            padding: 15px;
-            background: #f0f9ff;
-            border-left: 4px solid var(--primary);
-            border-radius: 4px;
-        }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .stat-box { background: #f1f3f4; padding: 15px; border-radius: 8px; text-align: center; }
+        .stat-value { font-size: 1.5em; font-weight: bold; color: var(--primary); display: block; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>AI 學習助理</h1>
-    <div class="subtitle">自動題庫生成系統 (One-Page Version)</div>
+    <div class="subtitle">學號：C112193156 | [cite_start]姓名：陳冠亦 [cite: 3, 4]</div>
 
     <div id="setup-panel" class="card">
-        <label>1. 輸入 Gemini API Key</label>
-        <input type="password" id="apiKey" placeholder="貼上你的 AIza 開頭金鑰...">
+        <label>Gemini API Key</label>
+        <input type="password" id="apiKey" placeholder="請貼上 AIza... 開頭的金鑰">
         
-        <label>2. 學習教材內容</label>
-        <textarea id="content" rows="6" placeholder="請貼上文章、筆記或重點整理..."></textarea>
+        <label>學習教材內容</label>
+        <textarea id="content" rows="6" placeholder="請貼上欲生成的教材文字..."></textarea>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
             <div>
                 <label>題型</label>
                 <select id="qType">
@@ -102,192 +92,140 @@
                 </select>
             </div>
             <div>
+                <label>難度</label>
+                <select id="difficulty">
+                    <option value="簡單">簡單</option>
+                    <option value="中等">中等</option>
+                    <option value="困難">困難</option>
+                </select>
+            </div>
+            <div>
                 <label>題數</label>
                 <input type="number" id="qCount" value="3" min="1" max="5">
             </div>
         </div>
-
-        <button id="generateBtn" onclick="startGeneration()">🚀 開始生成測驗</button>
+        [cite_start]<button id="genBtn" onclick="generateQuiz()">🚀 生成客製化題庫 [cite: 17]</button>
     </div>
 
     <div id="quiz-panel" class="card hidden">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; color: #6b7280;">
+        <div style="display: flex; justify-content: space-between; color: #666; margin-bottom: 15px;">
             <span id="progress">題目 1/3</span>
-            <span id="score">得分: 0</span>
+            <span id="timer">用時: 0s</span>
         </div>
-        <h3 id="question-text" style="font-size: 1.2em; line-height: 1.5; margin-bottom: 20px;">題目載入中...</h3>
-        <div id="options-container"></div>
-        
-        <div id="feedback-area" class="feedback hidden">
-            <p id="explanation" style="margin: 0;"></p>
-            <button onclick="nextQuestion()" style="margin-top: 10px; width: auto; padding: 8px 20px;">下一題</button>
+        <h3 id="qText">正在載入題目...</h3>
+        <div id="options"></div>
+        <div id="feedback" class="hidden" style="margin-top: 20px; padding: 15px; background: #e8f0fe; border-left: 5px solid var(--primary);">
+            <p id="explain"></p>
+            <button onclick="nextQ()" style="width: auto; padding: 10px 25px;">下一題</button>
         </div>
     </div>
 
-    <div id="result-panel" class="card hidden" style="text-align: center;">
-        <h2>測驗結束！</h2>
-        <div style="font-size: 3em; color: var(--primary); font-weight: bold; margin: 20px 0;" id="final-score">100%</div>
-        <p id="comment">分析中...</p>
-        <button onclick="location.reload()">🔄 再玩一次</button>
+    <div id="result-panel" class="card hidden">
+        [cite_start]<h2 style="text-align: center;">學習分析報告 [cite: 10]</h2>
+        <div class="stats-grid">
+            <div class="stat-box">正確率<span class="stat-value" id="resScore">0%</span></div>
+            <div class="stat-box">平均用時<span class="stat-value" id="resTime">0s</span></div>
+        </div>
+        <p id="aiAdvice" style="background: #fff3e0; padding: 15px; border-radius: 8px;"></p>
+        <button onclick="location.reload()">🔄 重新開始</button>
     </div>
 </div>
 
 <script>
-    // --- 系統核心邏輯 ---
     let questions = [];
-    let currentIdx = 0;
+    let curIdx = 0;
     let score = 0;
+    let startTime, qStartTime;
+    let timeLogs = [];
 
-    // 1. 呼叫 API
-    async function startGeneration() {
-        const key = document.getElementById('apiKey').value.trim();
-        const text = document.getElementById('content').value.trim();
+    async function generateQuiz() {
+        const key = document.getElementById('apiKey').value;
+        const text = document.getElementById('content').value;
         const type = document.getElementById('qType').value;
+        const diff = document.getElementById('difficulty').value;
         const count = document.getElementById('qCount').value;
 
-        if (!key || !text) {
-            alert("請輸入 API Key 和教材內容！");
-            return;
-        }
+        if(!key || !text) return alert("請填寫金鑰與內容！");
 
-        const btn = document.getElementById('generateBtn');
+        const btn = document.getElementById('genBtn');
         btn.disabled = true;
-        btn.textContent = "🤖 AI 正在閱讀並出題中...";
+        btn.textContent = "AI 正在分析教材並出題...";
 
-        // 構建 Prompt
-        const prompt = `
-            你是一個專業教師。請根據以下內容生成 ${count} 題 ${type}。
-            【內容】：${text}
-            
-            【嚴格規則】：
-            1. 必須回傳純 JSON 陣列。
-            2. 不要使用 Markdown (不要有 \`\`\`json )。
-            3. 格式範例：
-            [{"question":"題目","options":["A","B","C","D"],"answer":0,"explanation":"解析"}]
-            (answer 是正確選項的索引，0代表第一個選項)
-        `;
-
-        // 使用 gemini-1.5-flash
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+        const prompt = `你是一個專業教師。請根據教材內容：${text}，設計 ${count} 題 ${diff} 難度的 ${type}。請嚴格以純 JSON 陣列格式回傳，格式為：[{"question":"題目","options":["A","B","C","D"],"answer":0,"explanation":"解析"}]`;
 
         try {
-            const response = await fetch(url, {
+            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }]
-                })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error?.message || "API 請求失敗");
-            }
-
-            // 解析回應
-            const rawText = data.candidates[0].content.parts[0].text;
-            // 清理 Markdown
-            const cleanText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+            const data = await resp.json();
+            const raw = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
+            questions = JSON.parse(raw);
             
-            try {
-                questions = JSON.parse(cleanText);
-            } catch (e) {
-                // 如果 JSON 壞了，嘗試修復 (補尾括號)
-                if(cleanText.includes('[') && !cleanText.endsWith(']')) {
-                    questions = JSON.parse(cleanText + ']');
-                } else {
-                    throw new Error("AI 回傳格式錯誤，請重試");
-                }
-            }
-
-            if(questions.length > 0) {
-                initQuiz();
-            } else {
-                throw new Error("沒有生成任何題目");
-            }
-
-        } catch (err) {
-            console.error(err);
-            alert(`發生錯誤：${err.message}\n(如果是 404，請確認 API Key 是否開通了 Generative Language API)`);
-            btn.textContent = "🚀 重新生成";
+            document.getElementById('setup-panel').classList.add('hidden');
+            document.getElementById('quiz-panel').classList.remove('hidden');
+            startTime = Date.now();
+            loadQ();
+        } catch (e) {
+            alert("生成失敗，請檢查金鑰或內容格式。");
             btn.disabled = false;
+            btn.textContent = "🚀 生成客製化題庫";
         }
     }
 
-    // 2. 測驗邏輯
-    function initQuiz() {
-        document.getElementById('setup-panel').classList.add('hidden');
-        document.getElementById('quiz-panel').classList.remove('hidden');
-        currentIdx = 0;
-        score = 0;
-        renderQuestion();
-    }
-
-    function renderQuestion() {
-        if (currentIdx >= questions.length) {
-            showResult();
-            return;
-        }
+    function loadQ() {
+        if(curIdx >= questions.length) return showResult();
+        qStartTime = Date.now();
+        const q = questions[curIdx];
+        document.getElementById('progress').textContent = `題目 ${curIdx+1} / ${questions.length}`;
+        document.getElementById('qText').textContent = q.question;
+        document.getElementById('feedback').classList.add('hidden');
         
-        const q = questions[currentIdx];
-        document.getElementById('progress').textContent = `題目 ${currentIdx + 1} / ${questions.length}`;
-        document.getElementById('question-text').textContent = q.question;
-        document.getElementById('feedback-area').classList.add('hidden');
-        
-        const container = document.getElementById('options-container');
+        const container = document.getElementById('options');
         container.innerHTML = '';
-
-        // 防呆：如果是是非題但 AI 給了 4 個選項，或是反過來
-        let opts = q.options;
-        if (!opts || opts.length === 0) opts = ["是", "否"];
-
-        opts.forEach((opt, idx) => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.textContent = opt;
-            btn.onclick = () => check(idx, btn, q.answer);
-            container.appendChild(btn);
+        q.options.forEach((opt, i) => {
+            const b = document.createElement('button');
+            b.className = 'option-btn';
+            b.textContent = opt;
+            b.onclick = () => check(i, b);
+            container.appendChild(b);
         });
     }
 
-    function check(userIndex, btn, ansIndex) {
+    function check(idx, btn) {
+        const q = questions[curIdx];
+        const timeSpent = (Date.now() - qStartTime) / 1000;
+        timeLogs.push(timeSpent);
+        
         const btns = document.querySelectorAll('.option-btn');
         btns.forEach(b => b.disabled = true);
 
-        if (userIndex === ansIndex) {
+        if(idx === q.answer) {
             btn.classList.add('correct');
             score++;
-            document.getElementById('score').textContent = `得分: ${score}`;
         } else {
             btn.classList.add('wrong');
-            if(btns[ansIndex]) btns[ansIndex].classList.add('correct');
+            btns[q.answer].classList.add('correct');
         }
-
-        document.getElementById('explanation').textContent = `💡 解析：${questions[currentIdx].explanation}`;
-        document.getElementById('feedback-area').classList.remove('hidden');
+        document.getElementById('explain').textContent = "💡 解析：" + q.explanation;
+        document.getElementById('feedback').classList.remove('hidden');
     }
 
-    function nextQuestion() {
-        currentIdx++;
-        renderQuestion();
-    }
+    function nextQ() { curIdx++; loadQ(); }
 
     function showResult() {
         document.getElementById('quiz-panel').classList.add('hidden');
         document.getElementById('result-panel').classList.remove('hidden');
+        const acc = Math.round((score/questions.length)*100);
+        const avgT = (timeLogs.reduce((a,b)=>a+b,0)/questions.length).toFixed(1);
         
-        const finalPercent = Math.round((score / questions.length) * 100);
-        document.getElementById('final-score').textContent = `${finalPercent}%`;
+        document.getElementById('resScore').textContent = acc + "%";
+        document.getElementById('resTime').textContent = avgT + "s";
         
-        let msg = "";
-        if(finalPercent === 100) msg = "太神啦！全對！🎉";
-        else if(finalPercent >= 60) msg = "不錯喔，繼續保持！💪";
-        else msg = "再複習一下教材吧！📚";
-        
-        document.getElementById('comment').textContent = msg;
+        let advice = acc >= 80 ? "恭喜！你已精通此教材內容。" : "建議針對解析內容重新閱讀教材，補強薄弱點。";
+        document.getElementById('aiAdvice').textContent = "🤖 AI 學習建議：\n" + advice;
     }
 </script>
-
 </body>
 </html>
