@@ -6,75 +6,137 @@
     <title>AI 學習助理 - 專題示範版</title>
     <style>
         :root {
-            --primary: #4285f4;
-            --success: #34a853;
-            --error: #ea4335;
-            --bg: #f8f9fa;
-            --text: #202124;
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --bg: #f5f7fa;
+            --text: #2d3436;
+            --success: #00b894;
+            --error: #d63031;
+            --primary: #667eea;
         }
+
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg);
+            font-family: 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+            background: var(--bg);
+            background-attachment: fixed;
             color: var(--text);
-            padding: 20px;
+            margin: 0;
+            padding: 40px 20px;
             display: flex;
             justify-content: center;
         }
-        .container { width: 100%; max-width: 800px; }
+
+        .container { width: 100%; max-width: 850px; }
+
+        h1 { 
+            font-size: 2.5em; 
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #636e72;
+            font-weight: 500;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #dfe6e9;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+
         .card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.3);
             margin-bottom: 20px;
         }
+
         .hidden { display: none; }
-        h1 { text-align: center; color: var(--primary); margin-bottom: 5px; }
-        .subtitle { text-align: center; color: #666; font-size: 0.9em; margin-bottom: 25px; }
-        
-        label { display: block; margin-bottom: 8px; font-weight: bold; }
+
+        label { display: block; font-size: 1.1em; margin-bottom: 10px; color: #2d3436; font-weight: bold; }
+
         input, select, textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
+            border: 2px solid #edf2f7;
             border-radius: 8px;
             margin-bottom: 15px;
             box-sizing: border-box;
+            transition: all 0.3s ease;
+            background: #f8fafc;
         }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #667eea;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
         button {
-            background-color: var(--primary);
+            background: var(--primary-gradient);
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 18px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            transition: 0.3s;
+            letter-spacing: 2px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
         }
-        button:hover { background-color: #3367d6; }
-        
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
+            opacity: 0.95;
+        }
+
+        button:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
         .option-btn {
             background: white;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #edf2f7;
             text-align: left;
             margin-bottom: 10px;
             color: var(--text);
+            box-shadow: none;
+            padding: 15px;
         }
+
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #f0f4ff; }
+
         .option-btn.correct { background: var(--success); color: white; border-color: var(--success); }
         .option-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
-        
+
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .stat-box { background: #f1f3f4; padding: 15px; border-radius: 8px; text-align: center; }
-        .stat-value { font-size: 1.5em; font-weight: bold; color: var(--primary); display: block; }
+        .stat-box { 
+            background: #fff; 
+            padding: 20px; 
+            border-radius: 12px; 
+            text-align: center; 
+            border: 1px solid #edf2f7;
+            transition: 0.3s;
+        }
+        .stat-box:hover { border-color: #667eea; transform: scale(1.02); }
+        .stat-value { font-size: 1.8em; font-weight: bold; color: var(--primary); display: block; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>AI 學習助理</h1>
-    <div class="subtitle">學號：C112193156 | [cite_start]姓名：陳冠亦 [cite: 3, 4]</div>
+    <div class="subtitle">學號：C112193156 | 姓名：陳冠亦</div>
 
     <div id="setup-panel" class="card">
         <label>Gemini API Key</label>
@@ -83,7 +145,7 @@
         <label>學習教材內容</label>
         <textarea id="content" rows="6" placeholder="請貼上欲生成的教材文字..."></textarea>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
             <div>
                 <label>題型</label>
                 <select id="qType">
@@ -104,30 +166,30 @@
                 <input type="number" id="qCount" value="3" min="1" max="5">
             </div>
         </div>
-        [cite_start]<button id="genBtn" onclick="generateQuiz()">🚀 生成客製化題庫 [cite: 17]</button>
+        <button id="genBtn" onclick="generateQuiz()">🚀 生成客製化題庫</button>
     </div>
 
     <div id="quiz-panel" class="card hidden">
-        <div style="display: flex; justify-content: space-between; color: #666; margin-bottom: 15px;">
+        <div style="display: flex; justify-content: space-between; color: #666; margin-bottom: 15px; font-weight: 500;">
             <span id="progress">題目 1/3</span>
-            <span id="timer">用時: 0s</span>
+            <span id="timer">準備就緒</span>
         </div>
-        <h3 id="qText">正在載入題目...</h3>
+        <h3 id="qText" style="margin-top: 0; line-height: 1.5;">正在載入題目...</h3>
         <div id="options"></div>
-        <div id="feedback" class="hidden" style="margin-top: 20px; padding: 15px; background: #e8f0fe; border-left: 5px solid var(--primary);">
-            <p id="explain"></p>
-            <button onclick="nextQ()" style="width: auto; padding: 10px 25px;">下一題</button>
+        <div id="feedback" class="hidden" style="margin-top: 20px; padding: 20px; background: #f0f4ff; border-radius: 12px; border-left: 5px solid var(--primary);">
+            <p id="explain" style="margin-top: 0;"></p>
+            <button onclick="nextQ()" style="width: auto; padding: 10px 30px;">下一題</button>
         </div>
     </div>
 
     <div id="result-panel" class="card hidden">
-        [cite_start]<h2 style="text-align: center;">學習分析報告 [cite: 10]</h2>
+        <h2 style="text-align: center; margin-top: 0;">學習分析報告</h2>
         <div class="stats-grid">
             <div class="stat-box">正確率<span class="stat-value" id="resScore">0%</span></div>
             <div class="stat-box">平均用時<span class="stat-value" id="resTime">0s</span></div>
         </div>
-        <p id="aiAdvice" style="background: #fff3e0; padding: 15px; border-radius: 8px;"></p>
-        <button onclick="location.reload()">🔄 重新開始</button>
+        <p id="aiAdvice" style="background: #fff3e0; padding: 20px; border-radius: 12px; line-height: 1.6; border-left: 5px solid #ff9800;"></p>
+        <button onclick="location.reload()" style="margin-top: 10px;">🔄 重新開始</button>
     </div>
 </div>
 
@@ -135,17 +197,17 @@
     let questions = [];
     let curIdx = 0;
     let score = 0;
-    let startTime, qStartTime;
+    let qStartTime;
     let timeLogs = [];
 
     async function generateQuiz() {
-        const key = document.getElementById('apiKey').value;
-        const text = document.getElementById('content').value;
+        const key = document.getElementById('apiKey').value.trim();
+        const text = document.getElementById('content').value.trim();
         const type = document.getElementById('qType').value;
         const diff = document.getElementById('difficulty').value;
         const count = document.getElementById('qCount').value;
 
-        if(!key || !text) return alert("請填寫金鑰與內容！");
+        if (!key || !text) return alert("請填寫金鑰與內容！");
 
         const btn = document.getElementById('genBtn');
         btn.disabled = true;
@@ -157,28 +219,32 @@
             const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                body: JSON.stringify({ 
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { responseMimeType: "application/json" }
+                })
             });
             const data = await resp.json();
-            const raw = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
+            const raw = data.candidates[0].content.parts[0].text;
             questions = JSON.parse(raw);
             
             document.getElementById('setup-panel').classList.add('hidden');
             document.getElementById('quiz-panel').classList.remove('hidden');
-            startTime = Date.now();
             loadQ();
         } catch (e) {
-            alert("生成失敗，請檢查金鑰或內容格式。");
+            console.error(e);
+            alert("生成失敗，請檢查金鑰或網路連線。");
+        } finally {
             btn.disabled = false;
             btn.textContent = "🚀 生成客製化題庫";
         }
     }
 
     function loadQ() {
-        if(curIdx >= questions.length) return showResult();
+        if (curIdx >= questions.length) return showResult();
         qStartTime = Date.now();
         const q = questions[curIdx];
-        document.getElementById('progress').textContent = `題目 ${curIdx+1} / ${questions.length}`;
+        document.getElementById('progress').textContent = `題目 ${curIdx + 1} / ${questions.length}`;
         document.getElementById('qText').textContent = q.question;
         document.getElementById('feedback').classList.add('hidden');
         
@@ -201,12 +267,12 @@
         const btns = document.querySelectorAll('.option-btn');
         btns.forEach(b => b.disabled = true);
 
-        if(idx === q.answer) {
+        if (idx === q.answer) {
             btn.classList.add('correct');
             score++;
         } else {
             btn.classList.add('wrong');
-            btns[q.answer].classList.add('correct');
+            if(btns[q.answer]) btns[q.answer].classList.add('correct');
         }
         document.getElementById('explain').textContent = "💡 解析：" + q.explanation;
         document.getElementById('feedback').classList.remove('hidden');
@@ -217,13 +283,14 @@
     function showResult() {
         document.getElementById('quiz-panel').classList.add('hidden');
         document.getElementById('result-panel').classList.remove('hidden');
-        const acc = Math.round((score/questions.length)*100);
-        const avgT = (timeLogs.reduce((a,b)=>a+b,0)/questions.length).toFixed(1);
+        const acc = Math.round((score / questions.length) * 100);
+        const avgT = (timeLogs.reduce((a, b) => a + b, 0) / questions.length).toFixed(1);
         
         document.getElementById('resScore').textContent = acc + "%";
         document.getElementById('resTime').textContent = avgT + "s";
         
-        let advice = acc >= 80 ? "恭喜！你已精通此教材內容。" : "建議針對解析內容重新閱讀教材，補強薄弱點。";
+        let advice = acc >= 80 ? "太神啦！你已精通此教材內容。" : 
+                     acc >= 60 ? "表現不錯，建議針對解析稍作複習。" : "建議重新閱讀教材並補強薄弱點。";
         document.getElementById('aiAdvice').textContent = "🤖 AI 學習建議：\n" + advice;
     }
 </script>
