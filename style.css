@@ -1,0 +1,75 @@
+/* --- THEME DEFINITIONS --- */
+:root {
+    --page-bg: #f5f3ff; 
+    --card-bg: #ffffff; 
+    --card-border: #ddd6fe; 
+    --heading-color: #6d28d9; 
+    --text-color: #5b21b6; 
+    --subtle-text-color: #a78bfa; 
+    --button-bg: #8b5cf6; 
+    --button-text: #ffffff; 
+    --accent-color: #7c3aed; 
+    --danger-color: #ef4444;
+}
+
+/* --- THEME APPLICATION --- */
+body { font-family: 'Noto Sans TC', sans-serif; }
+#page-wrapper { 
+    background-color: var(--page-bg); 
+    color: var(--text-color); 
+    transition: background-color 0.3s, color 0.3s; 
+    min-height: 100vh; 
+}
+.themed-card { background-color: var(--card-bg); border-color: var(--card-border); }
+.themed-heading { color: var(--heading-color); }
+.themed-button-primary { background-color: var(--button-bg); color: var(--button-text); }
+.themed-button-primary:hover { background-color: var(--heading-color); }
+.themed-accent-text { color: var(--accent-color); }
+.themed-accent-text-hover:hover { color: var(--heading-color); }
+.themed-button-danger-text { color: var(--subtle-text-color); }
+.themed-button-danger-text:hover { color: var(--danger-color); }
+
+/* Tabs */
+.tab-btn {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    border-bottom-width: 2px;
+    border-color: transparent;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    cursor: pointer;
+    color: #6b7280;
+}
+.tab-btn:hover {
+    color: #374151;
+    border-color: #d1d5db;
+}
+.tab-btn.active { color: var(--heading-color); border-bottom-color: var(--heading-color); }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+/* Analysis Charts Mockup */
+.bar-container { background-color: #f3f4f6; border-radius: 9999px; height: 10px; width: 100%; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 9999px; transition: width 1s ease-in-out; }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+#loading-text { animation: pulse 1.5s ease-in-out infinite; color: var(--heading-color); }
+.drag-over { border-color: var(--accent-color) !important; background-color: #f5f3ff !important; }
+.question-card.sortable-ghost { background: var(--page-bg); opacity: 0.7; border-left-color: var(--accent-color); }
+.option-radio { width: 1.25rem; height: 1.25rem; margin-right: 0.5rem; flex-shrink: 0; accent-color: var(--heading-color); }
+
+/* Settings Popover */
+.settings-popover { visibility: hidden; opacity: 0; transform: translateY(-10px); transition: all 0.2s ease-in-out; }
+.settings-popover.open { visibility: visible; opacity: 1; transform: translateY(0); }
+
+/* Custom Scrollbar for tabs */
+.tabs-container::-webkit-scrollbar { display: none; }
+.tabs-container { -ms-overflow-style: none; scrollbar-width: none; }
